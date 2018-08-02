@@ -56,4 +56,41 @@ function reputation_xmlrpc_methods( $methods ) {
 }
 add_filter( 'xmlrpc_methods', 'reputation_xmlrpc_methods');
 
+
+add_action('admin_menu', 'reputation_plugin_setup_menu');
+function reputation_plugin_setup_menu(){
+    add_menu_page( 'Reputation console', 'Reputation', 'manage_options', 'reputation-plugin', 'main_view_init' );
+}
+ 
+function main_view_init(){
+    echo "<h1>Reputation console</h1>";
+
+    ?>
+    <h2>Registered users</h2>
+    <table>
+        <tr>
+            <th>User ID</th>            
+            <th>Username</th>
+            <th>Name</th>
+            <th>Registered</th>
+        </tr>
+
+    <?
+        $args['role'] = 'RepUser';
+        foreach(get_users($args) as $v_user){
+            echo '<tr>';
+            $user_info = get_userdata($v_user->ID);
+            echo '<td>' .  get_user_meta($v_user->ID, 'rep_id')[0] . '</td>';
+            echo '<td>' .  $user_info->user_login . '</td>';            
+            echo '<td>' .  $user_info->user_firstname . ' ' . $user_info->user_lastname . '</td>';
+            echo '<td>' .  $user_info->user_registered . '</td>';
+            echo '<td>' .  '<a>view</a>' . '</td>';
+            echo '<td>' .  '<a>delete</a>' . '</td>';
+            echo '</tr>';
+        }
+    ?>
+    </table>
+    <?
+}
+
 ?>
