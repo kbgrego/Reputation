@@ -14,6 +14,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.MayProject.Reputation.Connection.RequestMethod;
 
@@ -27,7 +29,7 @@ public class XML {
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
 		Writer out = new StringWriter();
 		tf.transform(new DOMSource(xml), new StreamResult(out));
-		System.out.println(out.toString());
+		System.out.print(out.toString());
 
 	}
 
@@ -63,7 +65,7 @@ public class XML {
 			eParam.appendChild(eValue);
 			eParams.appendChild(eParam);
 		}
-		root.appendChild(eParams);
+		root.appendChild(eParams);		
 		return getPlainString(doc);
 
 	}
@@ -72,7 +74,30 @@ public class XML {
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(is);
+		
 		return doc;
 
 	}
+
+	public static String getValue(Document xml, String name) {
+		NodeList list = xml.getElementsByTagName("member");
+		
+		for( int i=0;i<list.getLength();i++ ) {
+			Node found = getNode(list.item(i),"name");
+			if(found!=null && found.getTextContent().equals(name))
+				return getNode(list.item(i),"value").getTextContent();				
+		}
+		
+		return "";
+	}
+
+	private static Node getNode(Node item, String string) {
+		NodeList list = item.getChildNodes();
+		for(int i=0;i<item.getChildNodes().getLength();i++)
+			if(list.item(i).getNodeName().equals(string))
+				return list.item(i);
+		return null;
+	}
+	
+	
 }
