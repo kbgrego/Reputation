@@ -57,7 +57,7 @@ public class Core extends Application {
 		try {
 			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/SignIn.fxml"));
 			Scene scene = new Scene(mainView);
-			scene.getStylesheets().add("com/MayProject/Reputation/Style/Main.css");	
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/SignIn.css");	
 			Core.primaryStage.setMaximized(true);			
 			Core.primaryStage.setScene(scene);			
 		} catch (IOException e) {
@@ -118,7 +118,7 @@ public class Core extends Application {
 		
 		public void run(){
 			try {
-				mainView.set(FXMLLoader.load(ClassLoader.getSystemResource("com/Otium/Anerro/view/MainView.fxml")));
+				mainView.set(FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/MainView.fxml")));
 	            Platform.runLater(new Runnable() {
 	                @Override public void run() {
 	                	Scene scene=new Scene(mainView.getValue(),

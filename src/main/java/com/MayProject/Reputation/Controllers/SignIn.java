@@ -18,8 +18,10 @@ import javafx.util.Duration;
 public class SignIn extends BorderPane implements Initializable {
 	
 	@FXML public FlowPane FlowPaneSignInForm;
+	@FXML public Label LabelErrorMessage;
 	@FXML public TextField TextFieldLogin;
 	@FXML public PasswordField PasswordFieldPassowrd;
+	
 	@FXML public Label LabelCopyright;
 	@FXML public Label LabelVersion;
 	
@@ -27,6 +29,8 @@ public class SignIn extends BorderPane implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		LabelCopyright.setText(Core.getCopyright());
+		LabelVersion.setText(Core.getVersion());
+		
 		LabelVersion.setText(Core.getVersion());
 		
 		FadeTransition fade_in = new FadeTransition(Duration.seconds(3), FlowPaneSignInForm);
