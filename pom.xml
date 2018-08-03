@@ -57,11 +57,11 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.Otium.Anerro.App
+							<mainClass>com.MayProject.Reputation.Core
 							</mainClass>
 						</manifest>
 					</archive>
-					<finalName>Anerro</finalName>
+					<finalName>Reputation</finalName>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
