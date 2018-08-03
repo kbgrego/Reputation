@@ -2,7 +2,7 @@ package com.MayProject.Reputation.Connection;
 
 import org.w3c.dom.Document;
 
-import com.MayProject.Reputation.utils.XML;
+import com.MayProject.Reputation.Utils.XML;
 
 class SiteProcessing {
 	/**

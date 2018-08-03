@@ -1,4 +1,4 @@
-package com.MayProject.Reputation.utils;
+package com.MayProject.Reputation.Utils;
 
 import java.io.InputStream;
 import java.io.StringWriter;
