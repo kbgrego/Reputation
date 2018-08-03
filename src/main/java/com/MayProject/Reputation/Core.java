@@ -13,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -41,7 +40,7 @@ public class Core extends Application {
 
 	public void initPrimaryStage(Stage primaryStage) {
 		Core.primaryStage = primaryStage;
-		Core.primaryStage.initStyle(StageStyle.UNIFIED);
+		/* Core.primaryStage.initStyle(StageStyle.UNIFIED); */ 
 		/* Core.primaryStage.getIcons().add(new Image(ICON_PNG)); */
 		Core.primaryStage.setTitle(APPLICATION_NAME);
 		
@@ -124,7 +123,7 @@ public class Core extends Application {
 	                	Scene scene=new Scene(mainView.getValue(),
 					                			Core.primaryStage.getScene().getWidth(),
 					                			Core.primaryStage.getScene().getHeight());
-	                	scene.getStylesheets().add("com/Otium/Anerro/style/App.css");	 
+	                	scene.getStylesheets().add("com/MayProject/Reputation/Style/App.css");	 
 	                	FadeTransition fade_out = new FadeTransition(Duration.seconds(1), Core.primaryStage.getScene().getRoot());
 	                	fade_out.setFromValue(1);
 	                	fade_out.setToValue(0);
