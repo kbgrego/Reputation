@@ -8,7 +8,7 @@ public class Site {
 	private static String Token;
 
 	public static boolean Auth() throws Exception {
-		Token = SiteProcessing.processAuth(CONNECTOR.Request(RequestMethod.AUTH, getCredentials()));
+		Token = SiteProcessing.processAuth(CONNECTOR.Request(RequestMethod.AUTH, getCredentials()));		
 		return !Token.isEmpty();
 	}
 
@@ -17,6 +17,10 @@ public class Site {
 			return SiteProcessing.processCheckAuth(CONNECTOR.Request(RequestMethod.CHECKAUTH, getToken()));
 		return false;
 	}
+	
+	public static String RegistrateAuth(String form) throws Exception {		
+		return SiteProcessing.processCheckReg(CONNECTOR.Request(RequestMethod.REGISTRATEAUTH, getForm(form)));
+	}
 
 	private static String[] getToken() {
 		return new String[] { Token };
@@ -24,6 +28,10 @@ public class Site {
 
 	private static String[] getCredentials() {
 		return new String[] { User, Password };
+	}
+
+	private static String[] getForm(String form) {
+		return new String[] { User, Password, form };
 	}
 
 	public static String getUser() {

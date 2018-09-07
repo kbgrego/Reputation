@@ -24,7 +24,7 @@ public class Core extends Application {
 	private static final String COPYRIGHT        = "© 2018 May project";
     
 	public static Stage primaryStage;
-	private SimpleObjectProperty<Parent> mainView;
+	private static SimpleObjectProperty<Parent> mainView;
 
 	public static void main(String[] args) {	
 		launch(args);
@@ -65,7 +65,7 @@ public class Core extends Application {
 	
 	}
 
-	private void initMainView() {
+	public static void initMainView() {
 		mainView = new SimpleObjectProperty<Parent>();
 		new MainLoader(); 
 	}
@@ -110,20 +110,20 @@ public class Core extends Application {
         }		
 	}
 
-	private class MainLoader extends Thread {
+	private static class MainLoader extends Thread {
 		MainLoader(){
 			this.start();
 		}
 		
 		public void run(){
 			try {
-				mainView.set(FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/MainView.fxml")));
+				mainView.set(FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/sendform.fxml")));
 	            Platform.runLater(new Runnable() {
 	                @Override public void run() {
 	                	Scene scene=new Scene(mainView.getValue(),
 					                			Core.primaryStage.getScene().getWidth(),
 					                			Core.primaryStage.getScene().getHeight());
-	                	scene.getStylesheets().add("com/MayProject/Reputation/Style/App.css");	 
+	                	scene.getStylesheets().add("com/MayProject/Reputation/Style/sendform.css");	 
 	                	FadeTransition fade_out = new FadeTransition(Duration.seconds(1), Core.primaryStage.getScene().getRoot());
 	                	fade_out.setFromValue(1);
 	                	fade_out.setToValue(0);

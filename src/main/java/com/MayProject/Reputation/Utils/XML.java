@@ -66,6 +66,9 @@ public class XML {
 			eParams.appendChild(eParam);
 		}
 		root.appendChild(eParams);		
+		
+		prettyPrint(doc);
+		
 		return getPlainString(doc);
 
 	}
@@ -74,6 +77,8 @@ public class XML {
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(is);
+		
+		prettyPrint(doc);
 		
 		return doc;
 

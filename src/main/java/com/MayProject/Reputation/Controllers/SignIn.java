@@ -66,6 +66,10 @@ public class SignIn extends BorderPane implements Initializable {
 		new runSignIn();
 	}
 	
+	@FXML public void onShowSendForm(Event event) {
+		Core.initMainView();
+	}
+	
 	private static runSignIn isRun;
 	private class runSignIn implements Runnable {
 		
@@ -75,7 +79,7 @@ public class SignIn extends BorderPane implements Initializable {
 				new Thread(isRun=this).start();
 
 			LabelErrorMessage.setTextFill(Paint.valueOf("#555555"));
-			LabelErrorMessage.setText("trying to connect");
+			LabelErrorMessage.setText("connecting ...");
 			Site.setUser(TextFieldLogin.getText());
 			Site.setPassword(PasswordFieldPassowrd.getText());
 			
@@ -92,7 +96,7 @@ public class SignIn extends BorderPane implements Initializable {
 					@Override
 					public void run() {
 						LabelErrorMessage.setTextFill(Paint.valueOf(auth ? "#39d339" : "#d33939"));
-						LabelErrorMessage.setText(auth ? "success" : "failuer");
+						LabelErrorMessage.setText(auth ? "success" : "invalid login or password");						
 					}					
 				});											
 			} catch (Exception e) {

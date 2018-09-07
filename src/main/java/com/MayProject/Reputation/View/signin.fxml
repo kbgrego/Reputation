@@ -68,6 +68,11 @@
                                     </PasswordField>
                                  </children>
                               </FlowPane>
+                              <Hyperlink onAction="#onShowSendForm" text="Sign Up">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Hyperlink>
                            </children>
                         </VBox>
                      </children>

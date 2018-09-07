@@ -26,4 +26,18 @@ class SiteProcessing {
 		return XML.getValue(xml,"auth").equals("1");
 
 	}
+
+	public static String processCheckReg(Document xml) {
+		boolean confirmed = XML.getValue(xml,"auth").equals("1");
+		String result = "";
+		if(!confirmed) {
+			result = XML.getValue(xml, "ErrorMessage");
+			if(result.isEmpty())
+			result = "Failed, try again.";
+			
+		} else 
+			result = "Confirmed";
+			
+		return result;
+	}
 }

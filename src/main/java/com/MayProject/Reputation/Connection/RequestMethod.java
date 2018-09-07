@@ -2,7 +2,9 @@ package com.MayProject.Reputation.Connection;
 
 public enum RequestMethod {
 	AUTH("getAuth"), 
-	CHECKAUTH("checkAuth");
+	CHECKAUTH("checkAuth"),
+	REGISTRATEAUTH("registrateAuth")
+	;
 
 	public static final String PREFIX = "reputation";
 
