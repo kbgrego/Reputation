@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<methodCall>
+<methodName>reputation.checkAuth</methodName>
+<params>
+	<param><value>sIrHqqDl2ZoqkbNoioBEN1wbSOknan4DznMb0ZwXHdb</value></param>
+</params>
+</methodCall>

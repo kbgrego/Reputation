@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+      <struct>
+  <member><name>auth</name><value><boolean>1</boolean></value></member>
+  <member><name>token</name><value><string>RepTest|120|I6BIeE1gIe1IaqeohE5kQXrqY3lI4bnu0nqSHHjeIzc|7e1710480242aff82c624296a3be2f580702fbf1eb2ddc39c395cb39d97b9eb5</string></value></member>
+</struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>

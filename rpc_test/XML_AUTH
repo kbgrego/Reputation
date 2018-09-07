@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<methodCall>
+<methodName>reputation.getAuth</methodName>
+<params>
+	<param><value>RepTest</value></param>
+	<param><value>153246879001524568</value></param>	
+	<param><value>b0d5141a-f556-4672-9dd2-7fc78b445067</value></param>	
+</params>
+</methodCall>

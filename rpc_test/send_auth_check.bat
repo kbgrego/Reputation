@@ -1,0 +1,1 @@
+curl -H "Expect:" --data @XML_AUTH_CHECK http://may-project.pp.ua/xmlrpc.php > response.xml
