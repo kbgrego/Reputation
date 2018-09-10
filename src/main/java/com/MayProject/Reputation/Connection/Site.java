@@ -22,6 +22,10 @@ public class Site {
 		return SiteProcessing.processCheckReg(CONNECTOR.Request(RequestMethod.REGISTRATEAUTH, getForm(form)));
 	}
 
+	public static String ReceiveMessage() throws Exception {
+		return SiteProcessing.processReceiveMessage(CONNECTOR.Request(RequestMethod.RECEIVEMESSAGE, getToken()));
+	}
+
 	private static String[] getToken() {
 		return new String[] { Token };
 	}
@@ -48,6 +52,12 @@ public class Site {
 
 	public static void setPassword(String password) {
 		Password = password;
+	}
+
+	public static void clear() {
+		User = "";
+		Password = "";
+		Token = "";
 	}
 
 }

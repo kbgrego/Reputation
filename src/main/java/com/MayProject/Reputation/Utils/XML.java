@@ -1,6 +1,8 @@
 package com.MayProject.Reputation.Utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -74,9 +76,15 @@ public class XML {
 	}
 
 	public static Document parseDocument(InputStream is) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		InputStreamReader isr = new InputStreamReader(is);
+		while(isr.ready())
+			sb.append((char)isr.read());
+		
+		InputStream mais = new ByteArrayInputStream( sb.toString().trim().getBytes() );
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(is);
+		Document doc = db.parse(mais);
 		
 		prettyPrint(doc);
 		

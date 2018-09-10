@@ -12,6 +12,8 @@ import com.MayProject.Reputation.Connection.Site;
 import com.MayProject.Reputation.Resourses.Resources;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -28,8 +30,9 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 public class SendForm extends BorderPane implements Initializable {
+	private static enum AlertType { WARNING, INFORMING, SUCCESS }
 	
-	@FXML public FlowPane FlowPaneSendFormForm;
+	@FXML public FlowPane FlowPaneSendForm;
 	@FXML public GridPane GridPaneForm;
 	@FXML public TextField TextFieldLogin;
 	@FXML public PasswordField PasswordFieldPassword;
@@ -89,6 +92,20 @@ public class SendForm extends BorderPane implements Initializable {
 		
 	}
 
+	private void setAlertText(String text,  AlertType type) {
+		Paint color=Paint.valueOf("#000000");
+		LabelErrorMessage.setText(text);
+		
+		switch(type) {
+			case WARNING:   color = Paint.valueOf("#D33939"); break;
+			case INFORMING: color = Paint.valueOf("#555555"); break;
+			case SUCCESS:   color = Paint.valueOf("#559977"); break;
+		}
+		
+		LabelErrorMessage.setTextFill(color);
+	}
+
+
 	private void fadeinAnimation(Node node, int time) {
 		FadeTransition fade_in = new FadeTransition(Duration.seconds(time), node);
 		fade_in.setFromValue(0);
@@ -108,9 +125,9 @@ public class SendForm extends BorderPane implements Initializable {
 	@FXML public void onSend(Event event) {
 		if( isRun != null ) return ; 	
 						
-		LabelErrorMessage.setTextFill(Paint.valueOf("#d33939"));
-		if (!validateData()) { LabelErrorMessage.setText("No all required fileds are filled."); return ; }
-		if (!validatePass()) { LabelErrorMessage.setText("Passwords are not equal.");           return ; }
+		setAlertText("", AlertType.INFORMING);
+		if (!validateData()) { setAlertText("No all required fileds are filled.", AlertType.WARNING); return ; }
+		if (!validatePass()) { setAlertText("Passwords are not equal.", AlertType.WARNING);           return ; }
 						
 		login = TextFieldLogin.getText();
 		password = PasswordFieldPassword.getText();
@@ -118,6 +135,10 @@ public class SendForm extends BorderPane implements Initializable {
 		
 		new runSendForm();
 		
+	}
+	
+	@FXML public void backToSignIn (Event event) {
+		Core.initSignInView();
 	}
 
 	private boolean validateData() {
@@ -156,6 +177,10 @@ public class SendForm extends BorderPane implements Initializable {
 		for(Node node : GridPaneForm.getChildren()) {
 			if(node instanceof TextField) {
 				TextField field = (TextField) node;
+				
+				if(field.getPromptText().contains("password")) 
+					continue;
+				
 				buffer.append(field.getPromptText())
 				      .append(" : ")
 				      .append(field.getText())
@@ -174,8 +199,7 @@ public class SendForm extends BorderPane implements Initializable {
 			if(isRun==null)
 				new Thread(isRun=this).start();
 
-			LabelErrorMessage.setTextFill(Paint.valueOf("#555555"));
-			LabelErrorMessage.setText("connecting ...");
+			setAlertText("connecting ...", AlertType.INFORMING);
 			Site.setUser(login);
 			Site.setPassword(password);
 			
@@ -185,20 +209,37 @@ public class SendForm extends BorderPane implements Initializable {
 		public void run() {
 			try {
 				String result = Site.RegistrateAuth(FormToSend);
-				boolean auth = result.equals("Confirm");
+				boolean confirm = result.equals("Confirmed");
 				Platform.runLater(new Runnable(){
 					@Override
 					public void run() {
-						LabelErrorMessage.setTextFill(Paint.valueOf(auth ? "#39d339" : "#d33939"));
-						LabelErrorMessage.setText(auth ? "success" : result);						
+						setAlertText(confirm ? "Confirmed" : 
+							                    result, 
+								     confirm ? AlertType.SUCCESS : 
+								    	    AlertType.WARNING);					
 					}					
-				});											
+				});		
+				
+				if(confirm) {
+					
+					Timeline timeline = new Timeline();
+					timeline.getKeyFrames().add(new KeyFrame(
+							Duration.millis(3000), 
+							ae -> fadeoutAnimation(FlowPaneSendForm, 1)));
+					timeline.getKeyFrames().add(new KeyFrame(
+					        Duration.millis(4000),
+					        ae -> Core.initSignInView()));
+					timeline.play();
+					
+					;
+				}
+				
 			} catch (Exception e) {
 				Platform.runLater(new Runnable(){
 					@Override
 					public void run() {
-						LabelErrorMessage.setTextFill(Paint.valueOf("#d33939"));	
-						LabelErrorMessage.setText(e.getMessage());
+						System.out.println(e.getMessage());
+						setAlertText("Fail to connect", AlertType.WARNING);
 					}					
 				});
 			}

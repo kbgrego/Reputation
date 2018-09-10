@@ -40,4 +40,8 @@ class SiteProcessing {
 			
 		return result;
 	}
+
+	public static String processReceiveMessage(Document xml) {
+		return XML.getValue(xml, "message");
+	}
 }

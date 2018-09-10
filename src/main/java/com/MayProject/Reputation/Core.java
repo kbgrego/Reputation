@@ -3,10 +3,7 @@ package com.MayProject.Reputation;
 
 import java.io.IOException;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
 
 public class Core extends Application {
 	private static final String ICON_PNG         = "";
@@ -24,7 +20,6 @@ public class Core extends Application {
 	private static final String COPYRIGHT        = "© 2018 May project";
     
 	public static Stage primaryStage;
-	private static SimpleObjectProperty<Parent> mainView;
 
 	public static void main(String[] args) {	
 		launch(args);
@@ -35,7 +30,6 @@ public class Core extends Application {
 		initPrimaryStage(primaryStage);			
 		initSignInView();		
 		Core.primaryStage.show();		
-		/* initMainView(); */		
 	}
 
 	public void initPrimaryStage(Stage primaryStage) {
@@ -52,22 +46,40 @@ public class Core extends Application {
 		});
 	}
 
-	private void initSignInView() {
+	public static void initSignInView() {
 		try {
 			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/SignIn.fxml"));
 			Scene scene = new Scene(mainView);
-			scene.getStylesheets().add("com/MayProject/Reputation/Style/SignIn.css");	
-			Core.primaryStage.setMaximized(true);			
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/SignIn.css");					
 			Core.primaryStage.setScene(scene);			
 		} catch (IOException e) {
 			
 		}
 	
 	}
-
-	public static void initMainView() {
-		mainView = new SimpleObjectProperty<Parent>();
-		new MainLoader(); 
+	
+	public static void initSendFormView() {
+		try {
+			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/sendform.fxml"));
+			Scene scene = new Scene(mainView);
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/sendForm.css");					
+			Core.primaryStage.setScene(scene);			
+		} catch (IOException e) {
+			
+		}
+	
+	}
+	
+	public static void initReceivedFormView() {
+		try {
+			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/receivedform.fxml"));
+			Scene scene = new Scene(mainView);
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/receivedform.css");					
+			Core.primaryStage.setScene(scene);			
+		} catch (IOException e) {
+			
+		}
+	
 	}
 
 	public static String getVersion(){
@@ -108,40 +120,5 @@ public class Core extends Application {
         } catch (IOException e) {
 
         }		
-	}
-
-	private static class MainLoader extends Thread {
-		MainLoader(){
-			this.start();
-		}
-		
-		public void run(){
-			try {
-				mainView.set(FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/sendform.fxml")));
-	            Platform.runLater(new Runnable() {
-	                @Override public void run() {
-	                	Scene scene=new Scene(mainView.getValue(),
-					                			Core.primaryStage.getScene().getWidth(),
-					                			Core.primaryStage.getScene().getHeight());
-	                	scene.getStylesheets().add("com/MayProject/Reputation/Style/sendform.css");	 
-	                	FadeTransition fade_out = new FadeTransition(Duration.seconds(1), Core.primaryStage.getScene().getRoot());
-	                	fade_out.setFromValue(1);
-	                	fade_out.setToValue(0);
-                		FadeTransition fade_in = new FadeTransition(Duration.seconds(1), scene.getRoot());
-                		fade_in.setFromValue(0);
-                		fade_in.setToValue(1);                		
-	                	fade_out.setOnFinished(e -> {
-	                		scene.getRoot().setOpacity(0);
-	                		Core.primaryStage.setScene(scene);
-		                	fade_in.play();	                		
-	                	});
-	                	fade_out.play();
-	                }	                
-	            });
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 }

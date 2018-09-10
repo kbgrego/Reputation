@@ -7,6 +7,8 @@ import com.MayProject.Reputation.Core;
 import com.MayProject.Reputation.Connection.Site;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -22,6 +24,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 public class SignIn extends BorderPane implements Initializable {
+	private static enum AlertType { WARNING, INFORMING, SUCCESS }	
 	
 	@FXML public FlowPane FlowPaneSignInForm;
 	@FXML public Label LabelErrorMessage;
@@ -62,12 +65,25 @@ public class SignIn extends BorderPane implements Initializable {
 		fade_in.play();
 	}
 	
+	private void setAlertText(String text,  AlertType type) {
+		Paint color=Paint.valueOf("#000000");
+		LabelErrorMessage.setText(text);
+		
+		switch(type) {
+			case WARNING:   color = Paint.valueOf("#D33939"); break;
+			case INFORMING: color = Paint.valueOf("#555555"); break;
+			case SUCCESS:   color = Paint.valueOf("#559977"); break;
+		}
+		
+		LabelErrorMessage.setTextFill(color);
+	}
+	
 	@FXML public void signIn(Event event) {	
 		new runSignIn();
 	}
 	
 	@FXML public void onShowSendForm(Event event) {
-		Core.initMainView();
+		Core.initSendFormView();
 	}
 	
 	private static runSignIn isRun;
@@ -78,8 +94,7 @@ public class SignIn extends BorderPane implements Initializable {
 			if(isRun==null)
 				new Thread(isRun=this).start();
 
-			LabelErrorMessage.setTextFill(Paint.valueOf("#555555"));
-			LabelErrorMessage.setText("connecting ...");
+			setAlertText("connecting ...", AlertType.INFORMING);
 			Site.setUser(TextFieldLogin.getText());
 			Site.setPassword(PasswordFieldPassowrd.getText());
 			
@@ -95,16 +110,30 @@ public class SignIn extends BorderPane implements Initializable {
 				Platform.runLater(new Runnable(){
 					@Override
 					public void run() {
-						LabelErrorMessage.setTextFill(Paint.valueOf(auth ? "#39d339" : "#d33939"));
-						LabelErrorMessage.setText(auth ? "success" : "invalid login or password");						
+						setAlertText(auth ? "" : "invalid login or password", 
+								     auth ? AlertType.SUCCESS : AlertType.WARNING);
 					}					
-				});											
+				});		
+				
+				if(auth) {
+					
+					Timeline timeline = new Timeline();
+					timeline.getKeyFrames().add(new KeyFrame(
+							Duration.millis(0), 
+							ae -> fadeoutAnimation(FlowPaneSignInForm, 1)));
+					timeline.getKeyFrames().add(new KeyFrame(
+					        Duration.millis(2000),
+					        ae -> Core.initReceivedFormView()));
+					timeline.play();
+					
+					;
+				}
 			} catch (Exception e) {
 				Platform.runLater(new Runnable(){
 					@Override
 					public void run() {
-						LabelErrorMessage.setTextFill(Paint.valueOf("#d33939"));	
-						LabelErrorMessage.setText(e.getMessage());
+						System.out.println(e.getMessage());
+						setAlertText("Connection fail.", AlertType.WARNING);
 					}					
 				});
 			}

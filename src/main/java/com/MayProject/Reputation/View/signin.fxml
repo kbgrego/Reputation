@@ -66,13 +66,21 @@
                                           <Insets top="10.0" />
                                        </FlowPane.margin>
                                     </PasswordField>
+                                    <Button mnemonicParsing="false" onAction="#signIn" text="login">
+                                       <FlowPane.margin>
+                                          <Insets top="10.0" />
+                                       </FlowPane.margin>
+                                       <padding>
+                                          <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                                       </padding>
+                                    </Button>
+                                    <Hyperlink onAction="#onShowSendForm" text="Sign Up">
+                                       <FlowPane.margin>
+                                          <Insets top="10.0" />
+                                       </FlowPane.margin>
+                                    </Hyperlink>
                                  </children>
                               </FlowPane>
-                              <Hyperlink onAction="#onShowSendForm" text="Sign Up">
-                                 <VBox.margin>
-                                    <Insets top="10.0" />
-                                 </VBox.margin>
-                              </Hyperlink>
                            </children>
                         </VBox>
                      </children>

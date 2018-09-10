@@ -11,7 +11,7 @@ Version: 0.1
 //return;
 
 if ( ! defined( 'ABSPATH' ) ) { // prevent full path disclosure
-	exit;
+    exit;
 }
 
 function reputation_getAuth( $args ) {
@@ -48,49 +48,128 @@ function reputation_checkAuth( $args ) {
     return $return;    
 }
 
+function reputation_registrateAuth( $args ) {
+    global $wp_xmlrpc_server;
+    $wp_xmlrpc_server->escape( $args );
+
+    $username = $args[0];
+    $password = $args[1];
+    $form = $args[2];
+
+    $return['auth'] = false;
+        
+    $user_id = username_exists( $username );
+    if ( !$user_id and email_exists($user_email) == false ) {
+        $user_id = wp_create_user( $username, $password, '');
+        $user_id = wp_update_user( array( 'ID' => $user_id, 'role' => 'RepUser' ) );    
+        add_user_meta( $user_id, 'form', $form);
+        add_user_meta( $user_id, 'send', '');
+
+        $return['auth'] = true;
+        
+    } else {        
+        $return['ErrorMessage'] = __('User already exists.');
+    }
+
+    return $return;    
+}
+
+function reputation_receiveMessage( $args ) {
+    global $wp_xmlrpc_server;
+    $wp_xmlrpc_server->escape( $args );
+
+    $token = $args;
+
+    $user_id = wp_validate_auth_cookie($token, 'auth');
+    
+    if ( $user_id ){        
+        $return['auth'] = true;    
+        $return['message'] = get_user_meta($user_id, 'send')[0];
+        if(empty(get_user_meta($user_id, 'received')))
+            add_user_meta($user_id, 'received', 'yes');         
+    } else {
+        $return['auth'] = false;
+    }
+
+    return $return;    
+}
+
+add_filter( 'xmlrpc_methods', 'reputation_xmlrpc_methods');
 function reputation_xmlrpc_methods( $methods ) {
     $methods['reputation.getAuth'] = 'reputation_getAuth';
     $methods['reputation.checkAuth'] = 'reputation_checkAuth';
+    $methods['reputation.registrateAuth'] = 'reputation_registrateAuth';
+    $methods['reputation.receiveMessage'] = 'reputation_receiveMessage';
 
     return $methods;   
 }
-add_filter( 'xmlrpc_methods', 'reputation_xmlrpc_methods');
+
 
 
 add_action('admin_menu', 'reputation_plugin_setup_menu');
 function reputation_plugin_setup_menu(){
     add_menu_page( 'Reputation console', 'Reputation', 'manage_options', 'reputation-plugin', 'main_view_init' );
 }
+
+
+add_action('admin_enqueue_scripts', 'admin_style');
+function admin_style() {
+  wp_enqueue_style('admin-styles', plugin_dir_url( __FILE__ ) .'/admin.css');
+}
+
+
  
 function main_view_init(){
-    echo "<h1>Reputation console</h1>";
+    echo "<h1 class=\"reputation\" >Reputation console</h1>";
 
     ?>
     <h2>Registered users</h2>
-    <table>
+    <table class="reputation">
         <tr>
             <th>User ID</th>            
-            <th>Username</th>
-            <th>Name</th>
+            <th>login</th>
             <th>Registered</th>
+            <th>Received</th>
+            <th>Sending</th>
         </tr>
 
     <?
         $args['role'] = 'RepUser';
         foreach(get_users($args) as $v_user){
-            echo '<tr>';
+            $received = get_user_meta($v_user->ID, 'received')[0];
+            echo '<form action="'.esc_url( admin_url('admin-post.php') ).'" method="post">';
+            echo '<tr class="reputation">';
             $user_info = get_userdata($v_user->ID);
-            echo '<td>' .  get_user_meta($v_user->ID, 'rep_id')[0] . '</td>';
+            echo '<td>' .  $v_user->ID . '</td>';
             echo '<td>' .  $user_info->user_login . '</td>';            
-            echo '<td>' .  $user_info->user_firstname . ' ' . $user_info->user_lastname . '</td>';
             echo '<td>' .  $user_info->user_registered . '</td>';
-            echo '<td>' .  '<a>view</a>' . '</td>';
-            echo '<td>' .  '<a>delete</a>' . '</td>';
+            echo '<td><textarea readonly>' .  get_user_meta($v_user->ID, 'form')[0] . '</textarea></td>';
+            echo '<td><textarea name="send_text">' .  get_user_meta($v_user->ID, 'send')[0] . '</textarea></td>';
+            echo '<td>' .  '<input type="submit" value="Save sending" />' . '</td>';
+            if (!empty($received)) echo '<td>received</td>'; else echo '<td>not yet</td>';
+            echo '<td>' .  '<a href="'. get_edit_user_link( $v_user->ID ) .'">'. 'view profile' .'</a>' . '</td>';
+            echo '<input type="hidden" name="ID" value="'.$v_user->ID.'">';
+            echo '<input type="hidden" name="action" value="send_text_form">';
             echo '</tr>';
+            echo '</form>';
         }
     ?>
     </table>
     <?
 }
 
+add_action( 'admin_post_send_text_form', 'reputation_save_send_text' );
+function reputation_save_send_text($args) {
+  $user = get_userdata( $_POST['ID'] );
+  if ( $user === false ) {
+      //user id does not exist
+  } else {
+      update_user_meta( $_POST['ID'], 'send', $_POST['send_text']);
+  }
+
+  wp_redirect(admin_url('admin.php?page=reputation-plugin')); 
+}
+
+
 ?>
+                                    
