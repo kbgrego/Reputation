@@ -48,9 +48,9 @@ public class Core extends Application {
 
 	public static void initSignInView() {
 		try {
-			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/SignIn.fxml"));
+			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/signin.fxml"));
 			Scene scene = new Scene(mainView);
-			scene.getStylesheets().add("com/MayProject/Reputation/Style/SignIn.css");					
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/signin.css");
 			Core.primaryStage.setScene(scene);			
 		} catch (IOException e) {
 			
@@ -62,7 +62,7 @@ public class Core extends Application {
 		try {
 			Parent mainView = FXMLLoader.load(ClassLoader.getSystemResource("com/MayProject/Reputation/View/sendform.fxml"));
 			Scene scene = new Scene(mainView);
-			scene.getStylesheets().add("com/MayProject/Reputation/Style/sendForm.css");					
+			scene.getStylesheets().add("com/MayProject/Reputation/Style/sendform.css");
 			Core.primaryStage.setScene(scene);			
 		} catch (IOException e) {
 			
