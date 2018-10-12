@@ -64,6 +64,7 @@ function reputation_registrateAuth( $args ) {
         $user_id = wp_update_user( array( 'ID' => $user_id, 'role' => 'RepUser' ) );    
         add_user_meta( $user_id, 'form', $form);
         add_user_meta( $user_id, 'send', '');
+		add_user_meta( $user_id, 'received', 'no'); 
 
         $return['auth'] = true;
         
@@ -86,7 +87,7 @@ function reputation_receiveMessage( $args ) {
         $return['auth'] = true;    
         $return['message'] = get_user_meta($user_id, 'send')[0];
         if(empty(get_user_meta($user_id, 'received')))
-            add_user_meta($user_id, 'received', 'yes');         
+            update_user_meta($user_id, 'received', 'yes');         
     } else {
         $return['auth'] = false;
     }
@@ -146,7 +147,7 @@ function main_view_init(){
             echo '<td><textarea readonly>' .  get_user_meta($v_user->ID, 'form')[0] . '</textarea></td>';
             echo '<td><textarea name="send_text">' .  get_user_meta($v_user->ID, 'send')[0] . '</textarea></td>';
             echo '<td>' .  '<input type="submit" value="Save sending" />' . '</td>';
-            if (!empty($received)) echo '<td>received</td>'; else echo '<td>not yet</td>';
+            if ($received=='yes') echo '<td>received</td>'; else echo '<td>not yet</td>';
             echo '<td>' .  '<a href="'. get_edit_user_link( $v_user->ID ) .'">'. 'view profile' .'</a>' . '</td>';
             echo '<input type="hidden" name="ID" value="'.$v_user->ID.'">';
             echo '<input type="hidden" name="action" value="send_text_form">';
@@ -165,6 +166,7 @@ function reputation_save_send_text($args) {
       //user id does not exist
   } else {
       update_user_meta( $_POST['ID'], 'send', $_POST['send_text']);
+	  update_user_meta( $_POST['ID'], 'received', 'no');   
   }
 
   wp_redirect(admin_url('admin.php?page=reputation-plugin')); 
