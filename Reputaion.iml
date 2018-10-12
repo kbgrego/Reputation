@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="org.junit.jupiter:junit-jupiter-api:5.0.3" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
